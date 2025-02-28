@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.DAL;
 using WebApi.Data;
+using WebApi.Models;
 using WebApi.Interfaces;
 using WebApi.Repository;
 

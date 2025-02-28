@@ -27,8 +27,22 @@ public class UserRepository : IUserRepository
     {
         return _context.Users.Where(u => u.Name == name).FirstOrDefault();
     }
-    public bool UserExists(Guid id)
+    public bool UserExists(string name)
     {
-        return _context.Users.Any(u => u.UserId == id);
+        return _context.Users.Any(u => u.Name == name);
+    }
+
+    public bool ValidateUser(string name, string password)
+    {
+        User user = this.GetUser(name);
+        if (user != null)
+        {
+            if (user.Password == password)
+            {
+                return true;
+            }
+            else return false;
+        }
+        return false;
     }
 }

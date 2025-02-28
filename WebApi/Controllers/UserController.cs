@@ -34,11 +34,12 @@ public class UserController : ControllerBase
     [ProducesResponseType(400)]
     public IActionResult GetUser(Guid userId)
     {
-        var user = _mapper.Map<UserDto>(_userRepository.GetUser(userId));
 
-        if (user is null) return NotFound();
+        if (!_userRepository.UserExists(userId)) return NotFound();
 
         if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = _mapper.Map<UserDto>(_userRepository.GetUser(userId));
 
         return Ok(user);
     }
