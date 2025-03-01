@@ -1,13 +1,16 @@
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Options;
+
+namespace WebApi.Services;
 
 public class EncryptionService
 {
     private readonly byte[] _key;
 
-    public EncryptionService(string key)
+    public EncryptionService(IOptions<EncryptionKey> options)
     {
-        _key = SHA256.HashData(Encoding.UTF8.GetBytes(key));
+        _key = SHA256.HashData(Encoding.UTF8.GetBytes(options.Value.Key));
     }
 
     public string Encrypt(string textData)
@@ -51,10 +54,6 @@ public class EncryptionService
         using var srDecrypt = new StreamReader(csDecrypt);
 
         return srDecrypt.ReadToEnd();
-
-
-
-
     }
 
 }

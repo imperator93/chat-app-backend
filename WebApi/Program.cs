@@ -1,15 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.DAL;
 using WebApi.Data;
-using WebApi.Models;
 using WebApi.Interfaces;
 using WebApi.Repository;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.Configure<EncryptionKey>(builder.Configuration.GetSection("EncryptionKey"));
 builder.Services.AddTransient<Seed>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<DataContext>(options =>
 {

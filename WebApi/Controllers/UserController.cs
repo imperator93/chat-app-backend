@@ -28,19 +28,4 @@ public class UserController : ControllerBase
 
         return Ok(users);
     }
-
-    [HttpGet("{userId}")]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    [ProducesResponseType(400)]
-    public IActionResult GetUser(Guid userId)
-    {
-
-        if (!_userRepository.UserExists(userId)) return NotFound();
-
-        if (!ModelState.IsValid) return BadRequest(ModelState);
-
-        var user = _mapper.Map<UserDto>(_userRepository.GetUser(userId));
-
-        return Ok(user);
-    }
 }
