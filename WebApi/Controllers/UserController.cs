@@ -28,4 +28,17 @@ public class UserController : ControllerBase
 
         return Ok(users);
     }
+
+    [HttpPost]
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    public IActionResult CreateUser(string name, string password, string avatar)
+    {
+        var user = _userRepository.CreateUser(name, password, avatar);
+
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        // FIX THIS (only here because removing last migration)
+        return null;
+
+    }
 }

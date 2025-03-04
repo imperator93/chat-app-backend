@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
 using WebApi.Interfaces;
 using WebApi.Models;
@@ -13,8 +14,8 @@ public class MessageRepository : IMessageRepository
         _context = context;
     }
 
-    public ICollection<Message> GetMessages()
+    public async Task<ICollection<Message>> GetBroadcastMessages()
     {
-        return [.. _context.Messages.OrderBy(m => m.CreatedAtDateTime)];
+        return await _context.Messages.Where(m => m.MessageGroupId == null).ToListAsync();
     }
 }

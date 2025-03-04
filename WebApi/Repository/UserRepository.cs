@@ -1,10 +1,9 @@
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration.UserSecrets;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
 using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Services;
+
 namespace WebApi.Repository;
 
 public class UserRepository : IUserRepository
@@ -17,18 +16,18 @@ public class UserRepository : IUserRepository
         _encryptionService = encryptionService;
     }
 
-    public ICollection<User> GetUsers()
+    public async Task<ICollection<User>> GetUsers()
     {
-        return _context.Users.OrderBy(u => u.Name).ToList();
+        return await _context.Users.OrderBy(u => u.Name).ToListAsync();
     }
-    public User? GetUser(string name)
+    public async Task<User?> GetUser(string name)
     {
-        return _context.Users.Where(u => u.Name == name).FirstOrDefault();
+        return await _context.Users.FirstOrDefaultAsync(u => u.Name == name);
     }
 
-    public bool ValidateUser(string name, string password)
+    public async Task<bool> ValidateUser(string name, string password)
     {
-        var user = GetUser(name);
+        var user = await GetUser(name);
         if (user is not null)
         {
             string decryptedPass = _encryptionService.Decrypt(user.Password);
@@ -38,13 +37,14 @@ public class UserRepository : IUserRepository
 
     }
 
-    public bool UserExists(string name)
+    public async Task<bool> UserExists(string name)
     {
-        return _context.Users.Any(u => u.Name == name);
+        return await _context.Users.AnyAsync(u => u.Name == name);
     }
 
-    public User CreateUser(string name, string password, string avatar)
+    public async Task<User> CreateUser(string name, string password, string avatar)
     {
+        if (await UserExists(name)) return null;
 
         string encryptedPassword = _encryptionService.Encrypt(password);
 
@@ -57,8 +57,8 @@ public class UserRepository : IUserRepository
             IsOnline = true,
         };
 
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
 
         return user;
     }

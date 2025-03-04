@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8A8jGU8+a8A=",
+  "dgSpecHash": "MI6xVZk3fIQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\stoja\\Chat-app-backend\\WebApi\\WebApi.csproj",
+  "projectFilePath": "C:\\Users\\stoja\\Chat-app-backend\\webapi\\WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\stoja\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\stoja\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

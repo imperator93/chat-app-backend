@@ -9,9 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.Configure<EncryptionKey>(builder.Configuration.GetSection("EncryptionKey"));
+
 builder.Services.AddTransient<Seed>();
+builder.Services.AddScoped<EncryptionService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IChatGroupRepository, ChatGroupRepository>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -20,12 +24,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 var app = builder.Build();
 
-if (args.Length == 1 && args[0].ToLower() == "seeddata")
-{
-    SeedData(app);
-}
+if (args[0] == "seed") SeedData(app);
 
-void SeedData(IHost app)
+static void SeedData(IHost app)
 {
     var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
     using (var scope = scopedFactory.CreateScope())

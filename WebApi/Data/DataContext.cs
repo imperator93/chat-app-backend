@@ -11,5 +11,10 @@ public class DataContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<ChatGroup> ChatGroups { get; set; }
+    public DbSet<UserGroup> UserGroups { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+    }
 
 }

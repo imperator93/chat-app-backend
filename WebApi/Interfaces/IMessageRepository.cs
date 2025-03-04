@@ -4,5 +4,5 @@ namespace WebApi.Interfaces;
 
 public interface IMessageRepository
 {
-    ICollection<Message> GetMessages();
+    Task<ICollection<Message>> GetBroadcastMessages();
 }
