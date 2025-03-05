@@ -16,6 +16,6 @@ public class MessageRepository : IMessageRepository
 
     public async Task<ICollection<Message>> GetBroadcastMessages()
     {
-        return await _context.Messages.Where(m => m.MessageGroupId == null).ToListAsync();
+        return await _context.Messages.Where(m => m.ChatGroupId == null).ToListAsync();
     }
 }

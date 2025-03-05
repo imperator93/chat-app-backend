@@ -50,7 +50,7 @@ public class UserRepository : IUserRepository
 
         var user = new User()
         {
-            UserId = new Guid(),
+            Id = new Guid(),
             Name = name,
             Password = encryptedPassword,
             Avatar = avatar,

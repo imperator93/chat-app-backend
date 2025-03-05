@@ -2,5 +2,5 @@ namespace WebApi.Services;
 
 public class EncryptionKey
 {
-    public string Key { get; set; }
+    public required string Key { get; set; }
 }

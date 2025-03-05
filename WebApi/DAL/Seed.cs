@@ -22,21 +22,21 @@ public class Seed
                     Password = "12345",
                     Avatar = "avatarLeo",
                     IsOnline = false,
-                    UserId = new Guid(),
+                    Id = new Guid(),
                 },
                 new User() {
                     Name = "Asy",
                     Password = "12345",
                     Avatar = "avatarAsy",
                     IsOnline = false,
-                    UserId = new Guid(),
+                    Id = new Guid(),
                 },
                 new User() {
                     Name = "Charlie",
                     Password = "12345",
                     Avatar = "avatarCharlie",
                     IsOnline = false,
-                    UserId = new Guid(),
+                    Id = new Guid(),
                 }
             ];
 
@@ -49,19 +49,19 @@ public class Seed
             List<Message> messages = [
                 new Message() {
                     UserId = new Guid(),
-                    MessageId = new Guid(),
+                    Id = new Guid(),
                     Content = "oogjeoigjsjgj ijsiaJGH FIHAPHF DAHJ",
                     CreatedAtDateTime = new DateTime(),
                 },
                 new Message() {
                     UserId = new Guid(),
-                    MessageId = new Guid(),
+                    Id = new Guid(),
                     Content = "oogjeoigjsjgj ijsiaJGH FIHAPHF DAHJ",
                     CreatedAtDateTime = new DateTime(),
                 },
                 new Message() {
                     UserId = new Guid(),
-                    MessageId = new Guid(),
+                    Id = new Guid(),
                     Content = "oogjeoigjsjgj ijsiaJGH FIHAPHF DAHJ",
                     CreatedAtDateTime = new DateTime(),
                 }
