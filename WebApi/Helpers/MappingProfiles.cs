@@ -8,6 +8,7 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        CreateMap<User, UserDto>();
+        CreateMap<User, UserResponseDto>();
+        CreateMap<Message, MessageResponseDto>();
     }
 }

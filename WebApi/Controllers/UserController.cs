@@ -6,39 +6,49 @@ using WebApi.Models;
 
 namespace WebApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("api")]
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserService _userService;
     private readonly IMapper _mapper;
-    public UserController(IUserRepository userRepository, IMapper mapper)
+    public UserController(IUserService userService, IMapper mapper)
     {
-        _userRepository = userRepository;
+        _userService = userService;
         _mapper = mapper;
     }
 
-    [HttpGet]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<UserDto>))]
-    public IActionResult GetUsers()
+    [HttpGet("/users")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<UserResponseDto>))]
+    public async Task<IActionResult> GetUsers()
     {
-        var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsers());
+        var users = await _userService.GetAllAsync();
 
         if (!ModelState.IsValid) BadRequest(ModelState);
 
         return Ok(users);
     }
 
-    [HttpPost]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    public IActionResult CreateUser(string name, string password, string avatar)
+    [HttpPost("/user")]
+    [ProducesResponseType(200, Type = typeof(UserResponseDto))]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetUser(UserRequestDto userRequestDto)
     {
-        var user = _userRepository.CreateUser(name, password, avatar);
+        var user = await _userService.ValidateAndReturnUserAsync(userRequestDto);
+
+        if (!ModelState.IsValid) BadRequest(ModelState);
+
+        return Ok(user);
+    }
+
+    [HttpPost("/users")]
+    [ProducesResponseType(200, Type = typeof(UserResponseDto))]
+    public async Task<IActionResult> CreateUser(UserRequestDto userRequestDto)
+    {
+        var user = await _userService.CreateUserAsync(userRequestDto);
 
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        // FIX THIS (only here because removing last migration)
-        return null;
-
+        return Ok(user);
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.Data;
+using WebApi.Dto;
 using WebApi.Interfaces;
 using WebApi.Models;
 
@@ -18,4 +19,10 @@ public class MessageRepository : IMessageRepository
     {
         return await _context.Messages.Where(m => m.ChatGroupId == null).ToListAsync();
     }
+    // CONTINUE HERE
+    public async Task<Message> CreateMessage(MessageRequestDto messageRequestDto)
+    {
+        var user = await _context.Users.SingleAsync(u => u.Id == messageRequestDto.UserId);
+    }
+
 }
