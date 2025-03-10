@@ -21,6 +21,10 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users.OrderBy(u => u.Name).ToListAsync();
     }
+    public async Task<User?> GetUser(Guid id)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+    }
     public async Task<User?> GetUser(string name)
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Name == name);

@@ -14,17 +14,9 @@ public class ChatGroupRepository : IChatGroupRepository
         _context = context;
     }
 
-    public async Task<ChatGroup?> GetChatGroup(Guid Id)
+    public async Task<ChatGroup?> GetChatGroup(Guid? id)
     {
-        try
-        {
-            return await _context.ChatGroups.FirstOrDefaultAsync(cg => cg.Id == Id);
-        }
-        catch (Exception ex)
-        {
-            System.Console.WriteLine(ex);
-            return null;
-        }
+        return await _context.ChatGroups.FirstOrDefaultAsync(cg => cg.Id == id);
     }
 
 }
