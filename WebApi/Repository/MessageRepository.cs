@@ -1,8 +1,4 @@
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.Json;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.VisualBasic;
 using WebApi.Data;
 using WebApi.Dto;
 using WebApi.Interfaces;
@@ -22,7 +18,7 @@ public class MessageRepository : IMessageRepository
         _chatGroupRepository = chatGroupRepository;
     }
 
-    public async Task<ICollection<Message?>> GetBroadcastMessages()
+    public async Task<ICollection<Message>> GetBroadcastMessages()
     {
         return await _context.Messages.Where(m => m.ChatGroupId == null).ToListAsync();
     }
@@ -81,5 +77,17 @@ public class MessageRepository : IMessageRepository
         await _context.SaveChangesAsync();
 
         return message;
+    }
+
+    public async Task<bool> DeleteMessage(MessageRequestDto messageRequestDto)
+    {
+        var message = await _context.Messages.FirstOrDefaultAsync(m => m.Id == messageRequestDto.Id);
+
+        if (message is null) return false;
+
+        _context.Messages.Remove(message);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

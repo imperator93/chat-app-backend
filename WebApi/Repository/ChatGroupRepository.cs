@@ -18,5 +18,4 @@ public class ChatGroupRepository : IChatGroupRepository
     {
         return await _context.ChatGroups.FirstOrDefaultAsync(cg => cg.Id == id);
     }
-
 }
