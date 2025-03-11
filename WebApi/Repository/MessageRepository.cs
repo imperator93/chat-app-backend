@@ -1,4 +1,7 @@
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.Json;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.VisualBasic;
 using WebApi.Data;
 using WebApi.Dto;
@@ -19,45 +22,64 @@ public class MessageRepository : IMessageRepository
         _chatGroupRepository = chatGroupRepository;
     }
 
-    public async Task<ICollection<Message>> GetBroadcastMessages()
+    public async Task<ICollection<Message?>> GetBroadcastMessages()
     {
         return await _context.Messages.Where(m => m.ChatGroupId == null).ToListAsync();
     }
-    // CONTINUE HERE
+
     public async Task<Message?> CreateMessage(MessageRequestDto messageRequestDto)
     {
         var user = await _userRepository.GetUser(messageRequestDto.UserId);
-        var chatGroup = await _chatGroupRepository.GetChatGroup(messageRequestDto.ChatGroupId);
 
         if (user is null) return null;
 
-        if (chatGroup is null)
+        var message = new Message()
         {
-            var newChatGroup = new ChatGroup()
-            {
-                Id = messageRequestDto.ChatGroupId,
-                Messages = [],
-                Users = [],
-            };
+            Content = messageRequestDto.Content,
+            CreatedAt = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            User = user,
+            UserId = user.Id
+        };
 
-            await _context.ChatGroups.AddAsync(newChatGroup);
+        if (messageRequestDto.ChatGroupId is null)
+        {
+            await _context.Messages.AddAsync(message);
+            await _context.SaveChangesAsync();
 
-            var message = new Message()
-            {
-                ChatGroup = chatGroup ?? newChatGroup,
-                ChatGroupId = chatGroup.Id ?? newChatGroup.Id,
-                Content = messageRequestDto.Content,
-                CreatedAt = DateTime.Now,
-                Id = Guid.NewGuid(),
-                User = user,
-                UserId = user.Id
-            };
+            return message;
+        }
+
+        var chatGroup = await _chatGroupRepository.GetChatGroup(messageRequestDto.ChatGroupId);
+
+        if (chatGroup is not null)
+        {
+            message.ChatGroup = chatGroup;
+            message.ChatGroupId = chatGroup.Id;
 
             await _context.Messages.AddAsync(message);
             await _context.SaveChangesAsync();
 
             return message;
         }
-    }
 
+        var newChatGroup = new ChatGroup()
+        {
+            Id = Guid.NewGuid(),
+            Users = [],
+            Messages = [],
+        };
+
+        message.ChatGroup = newChatGroup;
+        message.ChatGroupId = newChatGroup.Id;
+
+        newChatGroup.Messages.Add(message);
+        newChatGroup.Users.Add(user);
+
+        await _context.ChatGroups.AddAsync(newChatGroup);
+        await _context.Messages.AddAsync(message);
+        await _context.SaveChangesAsync();
+
+        return message;
+    }
 }
